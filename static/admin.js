@@ -1,75 +1,41 @@
-const queueContainer =
-    document.getElementById("queueContainer");
+const queueContainer = document.getElementById("queueContainer");
+const emptyQueue = document.getElementById("emptyQueue");
+const waitingCount = document.getElementById("waitingCount");
 
-const emptyQueue =
-    document.getElementById("emptyQueue");
-
-const waitingCount =
-    document.getElementById("waitingCount");
-
-const currentToken =
-    document.getElementById("currentToken");
-
-const currentService =
-    document.getElementById("currentService");
-
+const currentToken = document.getElementById("currentToken");
+const currentService = document.getElementById("currentService");
 const completeCurrentButton =
-    document.getElementById(
-        "completeCurrentButton"
-    );
+    document.getElementById("completeCurrentButton");
 
-const adminLocation =
-    document.getElementById("adminLocation");
+const adminLocation = document.getElementById("adminLocation");
 
-
-// ==========================================
-// LOAD DASHBOARD
-// ==========================================
 
 async function loadDashboard() {
 
+    const location = adminLocation.value;
+
     try {
 
-        const location =
-            adminLocation.value;
+        // Get waiting queue
+        const queueResponse = await fetch(
+            "/api/queue?location=" +
+            encodeURIComponent(location)
+        );
+
+        const queue = await queueResponse.json();
 
 
-        // ----------------------------------
-        // GET WAITING CUSTOMERS
-        // ----------------------------------
+        // Get current serving token
+        const currentResponse = await fetch(
+            "/api/current?location=" +
+            encodeURIComponent(location)
+        );
 
-        const queueResponse =
-            await fetch(
-                "/api/queue?location=" +
-                encodeURIComponent(location)
-            );
+        const current = await currentResponse.json();
 
 
-        const queue =
-            await queueResponse.json();
-
-
-        // ----------------------------------
-        // GET CURRENT TOKEN
-        // ----------------------------------
-
-        const currentResponse =
-            await fetch(
-                "/api/current?location=" +
-                encodeURIComponent(location)
-            );
-
-
-        const current =
-            await currentResponse.json();
-
-
-        // ----------------------------------
-        // CURRENT TOKEN
-        // ----------------------------------
-
-        currentToken.textContent =
-            current.token;
+        // Show current token
+        currentToken.textContent = current.token;
 
 
         if (current.token !== "--") {
@@ -97,100 +63,62 @@ async function loadDashboard() {
         }
 
 
-        // ----------------------------------
-        // WAITING COUNT
-        // ----------------------------------
-
-        waitingCount.textContent =
-            queue.length;
+        // Waiting count
+        waitingCount.textContent = queue.length;
 
 
-        // ----------------------------------
-        // CLEAR OLD QUEUE
-        // ----------------------------------
-
+        // Clear old queue
         queueContainer.innerHTML = "";
 
 
-        // ----------------------------------
-        // EMPTY QUEUE
-        // ----------------------------------
-
         if (queue.length === 0) {
 
-            emptyQueue.style.display =
-                "block";
+            emptyQueue.style.display = "block";
 
         } else {
 
-            emptyQueue.style.display =
-                "none";
+            emptyQueue.style.display = "none";
+
+
+            queue.forEach(function (item) {
+
+                const queueItem =
+                    document.createElement("div");
+
+                queueItem.classList.add("queue-item");
+
+                queueItem.innerHTML = `
+                    <div class="queue-token">
+                        <h3>${item.token}</h3>
+                        <span class="waiting-badge">
+                            Waiting
+                        </span>
+                    </div>
+
+                    <div class="queue-details">
+                        <p>
+                            <strong>Location:</strong>
+                            ${item.location}
+                        </p>
+
+                        <p>
+                            <strong>Service:</strong>
+                            ${item.service}
+                        </p>
+                    </div>
+
+                    <button
+                        class="call-button"
+                        onclick="callNext(${item.id})">
+                        Call Next
+                    </button>
+                `;
+
+                queueContainer.appendChild(queueItem);
+
+            });
 
         }
-
-
-        // ----------------------------------
-        // DISPLAY WAITING CUSTOMERS
-        // ----------------------------------
-
-        queue.forEach(function (item) {
-
-            const queueItem =
-                document.createElement("div");
-
-
-            queueItem.classList.add(
-                "queue-item"
-            );
-
-
-            queueItem.innerHTML = `
-
-                <div class="queue-token">
-
-                    <h3>
-                        ${item.token}
-                    </h3>
-
-                    <span class="waiting-badge">
-                        Waiting
-                    </span>
-
-                </div>
-
-
-                <div class="queue-details">
-
-                    <p>
-                        <strong>Location:</strong>
-                        ${item.location}
-                    </p>
-
-                    <p>
-                        <strong>Service:</strong>
-                        ${item.service}
-                    </p>
-
-                </div>
-
-
-                <button
-                    class="call-button"
-                    onclick="callNext(${item.id})">
-
-                    Call Next
-
-                </button>
-
-            `;
-
-
-            queueContainer.appendChild(
-                queueItem
-            );
-
-        });
-
 
     } catch (error) {
 
@@ -200,46 +128,31 @@ async function loadDashboard() {
         );
 
     }
-
 }
 
 
-// ==========================================
-// LOCATION CHANGE
-// ==========================================
-
+// Change location
 adminLocation.addEventListener(
     "change",
-    function () {
-
-        loadDashboard();
-
-    }
+    loadDashboard
 );
 
 
-// ==========================================
-// CALL NEXT
-// ==========================================
-
+// Call Next
 async function callNext(tokenId) {
 
     try {
 
-        const response =
-            await fetch(
-                "/api/token/" +
-                tokenId +
-                "/call",
-                {
-                    method: "POST"
-                }
-            );
+        const response = await fetch(
+            "/api/token/" +
+            tokenId +
+            "/call",
+            {
+                method: "POST"
+            }
+        );
 
-
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
         alert(data.message);
 
@@ -250,24 +163,17 @@ async function callNext(tokenId) {
 
         }
 
-
     } catch (error) {
 
         console.error(error);
 
-        alert(
-            "Something went wrong."
-        );
+        alert("Something went wrong.");
 
     }
-
 }
 
 
-// ==========================================
-// COMPLETE CURRENT TOKEN
-// ==========================================
-
+// Complete current token
 async function completeCurrentToken() {
 
     const tokenId =
@@ -275,28 +181,22 @@ async function completeCurrentToken() {
 
 
     if (!tokenId) {
-
         return;
-
     }
 
 
     try {
 
-        const response =
-            await fetch(
-                "/api/token/" +
-                tokenId +
-                "/complete",
-                {
-                    method: "POST"
-                }
-            );
+        const response = await fetch(
+            "/api/token/" +
+            tokenId +
+            "/complete",
+            {
+                method: "POST"
+            }
+        );
 
-
-        const data =
-            await response.json();
-
+        const data = await response.json();
 
         alert(data.message);
 
@@ -307,22 +207,15 @@ async function completeCurrentToken() {
 
         }
 
-
     } catch (error) {
 
         console.error(error);
 
-        alert(
-            "Something went wrong."
-        );
+        alert("Something went wrong.");
 
     }
-
 }
 
 
-// ==========================================
-// INITIAL LOAD
-// ==========================================
-
+// Load dashboard when page opens
 loadDashboard();
