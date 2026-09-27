@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>QueueLess</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <header class="main-header">
+
+        <div>
+            <h1>QueueLess</h1>
+            <p>Smart Virtual Queue</p>
+        </div>
+
+        <a href="/admin" class="admin-link">
+            Admin
+        </a>
+
+    </header>
+
+
+    <main>
+
+        <section class="hero">
+
+            <div>
+
+                <p class="small-title">
+                    SMART QUEUE MANAGEMENT
+                </p>
+
+                <h2>
+                    Skip the physical queue.
+                </h2>
+
+                <p>
+                    Choose a place, select a service,
+                    get your digital token and wait comfortably.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="service-card">
+
+            <h3>
+                Join a Queue
+            </h3>
+
+            <label for="location">
+                Select Location
+            </label>
+
+            <select id="location">
+
+                <option value="">
+                    Choose a location
+                </option>
+
+                <option value="City Hospital">
+                    City Hospital
+                </option>
+
+                <option value="TCS Canteen">
+                    TCS Canteen
+                </option>
+
+                <option value="ABC Bank">
+                    ABC Bank
+                </option>
+
+                <option value="QuickFix Service Center">
+                    QuickFix Service Center
+                </option>
+
+            </select>
+
+
+            <label for="service">
+                Select Service
+            </label>
+
+            <select id="service">
+
+                <option value="">
+                    Choose a service
+                </option>
+
+            </select>
+
+
+            <button id="tokenButton"
+                    class="primary-button">
+
+                Get My Token
+
+            </button>
+
+        </section>
+
+
+        <section id="tokenResult"
+                 class="token-card">
+
+            <p class="token-label">
+                YOUR TOKEN
+            </p>
+
+            <h2 id="tokenNumber">
+                --
+            </h2>
+
+            <div class="token-details">
+
+                <div>
+                    <span>People Ahead</span>
+                    <strong id="peopleAhead">
+                        --
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Estimated Wait</span>
+                    <strong id="waitTime">
+                        --
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}">
+    </script>
+
+</body>
+
+</html>

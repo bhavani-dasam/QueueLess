@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>QueueLess Admin</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <header class="main-header">
+
+        <div>
+
+            <h1>QueueLess Admin</h1>
+
+            <p>
+                Queue Management Dashboard
+            </p>
+
+        </div>
+
+        <a href="/" class="admin-link">
+            User View
+        </a>
+
+    </header>
+
+
+    <main>
+
+        <!-- LOCATION -->
+
+        <section class="admin-header">
+
+            <div>
+
+                <p class="small-title">
+                    LIVE QUEUE
+                </p>
+
+                <h2>
+                    Manage Customer Queue
+                </h2>
+
+                <p>
+                    Select a location to manage its queue.
+                </p>
+
+            </div>
+
+
+            <div class="location-control">
+
+                <label for="adminLocation">
+                    Select Location
+                </label>
+
+                <select id="adminLocation">
+
+                    <option value="City Hospital">
+                        City Hospital
+                    </option>
+
+                    <option value="TCS Canteen">
+                        TCS Canteen
+                    </option>
+
+                    <option value="ABC Bank">
+                        ABC Bank
+                    </option>
+
+                    <option value="QuickFix Service Center">
+                        QuickFix Service Center
+                    </option>
+
+                </select>
+
+            </div>
+
+        </section>
+
+
+        <!-- DASHBOARD CARDS -->
+
+        <section class="dashboard-grid">
+
+
+            <!-- CURRENT TOKEN -->
+
+            <div class="dashboard-card current-card">
+
+                <p class="card-title">
+                    CURRENT TOKEN
+                </p>
+
+                <h2 id="currentToken">
+                    --
+                </h2>
+
+                <p id="currentService"
+                   class="current-service">
+
+                    No customer is currently being served.
+
+                </p>
+
+
+                <button id="completeCurrentButton"
+                        class="complete-button"
+                        onclick="completeCurrentToken()"
+                        style="display: none;">
+
+                    Complete
+
+                </button>
+
+            </div>
+
+
+            <!-- WAITING -->
+
+            <div class="dashboard-card">
+
+                <p class="card-title">
+                    WAITING
+                </p>
+
+                <h2 id="waitingCount">
+                    0
+                </h2>
+
+                <p>
+                    Customers waiting for service
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- WAITING CUSTOMERS -->
+
+        <section class="queue-list-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="small-title">
+                        QUEUE
+                    </p>
+
+                    <h2>
+                        Waiting Customers
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div id="queueContainer"
+                 class="queue-container">
+
+                <!-- Waiting customers will appear here -->
+
+            </div>
+
+
+            <div id="emptyQueue"
+                 class="empty-queue">
+
+                No customers are currently waiting.
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="{{ url_for('static', filename='admin.js') }}">
+    </script>
+
+</body>
+
+</html>
